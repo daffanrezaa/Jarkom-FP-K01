@@ -128,7 +128,7 @@ Jaringan ini dirancang menggunakan arsitektur **three-tier hierarchy** yang terd
 
 Berikut adalah diagram topologi fisik yang menghubungkan ketiga lokasi:
 
-![Topologi Keseluruhan](assets/topologi.png)
+![Topologi Keseluruhan](topologi.png)
 
 **Penjelasan:**
 - **Router-Utama** berfungsi sebagai core router yang menghubungkan semua lokasi dan menyediakan akses internet
