@@ -23,6 +23,62 @@
 *   Tabel alokasi IP untuk setiap divisi berdasarkan kebutuhan host (Network ID, Gateway, Netmask).
 
 ---
+### Pembagian Subnet (CIDR)
+
+Pada bagian ini, dilakukan pengelompokan subnet (Aggregation) untuk menyederhanakan tabel routing. Berikut adalah detail perhitungan IP.
+
+### 1. Tabel Pembagian Subnet (Level Daun)
+
+Berikut adalah alokasi IP untuk setiap departemen di Gedung ARA Tech:
+
+| Subnet | Kebutuhan Host | Network ID | Subnet Mask | Range IP | Prefix |
+| :--- | :---: | :--- | :--- | :--- | :---: |
+| **A15** | 104 | `10.0.8.0` | `255.255.255.128` | `.8.1` - `.8.126` | **/25** |
+| **A17** | 102 | `10.0.8.128`| `255.255.255.128` | `.8.129` - `.8.254` | **/25** |
+| **A16** | 88 | `10.0.9.0` | `255.255.255.128` | `.9.1` - `.9.126` | **/25** |
+| **A18** | 81 | `10.0.9.128`| `255.255.255.128` | `.9.129` - `.9.254` | **/25** |
+| **A14** | 45 | `10.0.10.0` | `255.255.255.192` | `.10.1` - `.10.62` | **/26** |
+| **A13** | 15 | `10.0.10.64`| `255.255.255.224` | `.10.65` - `.10.94` | **/27** |
+| **A12** | 3 | `10.0.10.96`| `255.255.255.248` | `.10.97` - `.10.102` | **/29** |
+
+---
+
+### 2. Proses Supernetting (Aggregation)
+
+Penggabungan dilakukan bertahap dari level terendah hingga level tertinggi (Root).
+
+#### **Tahap 1: Penggabungan Level B (Prefix /24)**
+Kami menggabungkan subnet-subnet kecil menjadi blok /24 sesuai struktur departemen.
+
+| Blok | Gabungan Dari | Network ID | Range IP | Prefix Baru |
+| :--- | :--- | :--- | :--- | :--- |
+| **B1** | A16 + A17 | **10.0.8.0** | `.8.1` - `.8.254` | **/24** |
+| **B2** | A14 + A15 | **10.0.10.0** | `.10.1` - `.10.254` | **/24** |
+
+#### **Tahap 2: Penggabungan Level C (Prefix /23)**
+Menggabungkan Blok B dengan sisa subnet lain.
+
+| Blok | Gabungan Dari | Network ID | Range IP | Prefix Baru |
+| :--- | :--- | :--- | :--- | :--- |
+| **C1** | B1 + A18 | **10.0.8.0** | `.8.1` - `.9.254` | **/23** |
+| **C2** | B2 + A13 | **10.0.10.0** | `.10.1` - `.11.254` | **/23** |
+
+#### **Tahap 3 & Final: Supernet Utama (Prefix /21)**
+Menggabungkan seluruh blok Gedung ARA Tech menjadi satu jalur routing utama.
+
+| Blok | Gabungan Dari | Network ID | Range IP | Prefix Baru |
+| :--- | :--- | :--- | :--- | :--- |
+| **D1** | C1 + C2 | **10.0.8.0** | `.8.1` - `.11.254` | **/22** |
+| **E1** | D1 + A12 | **10.0.8.0** | `.8.1` - `.15.254` | **/21** |
+
+---
+
+### 3. Diagram Pohon CIDR (CIDR Tree)
+
+Berikut adalah visualisasi struktur IP Address untuk Gedung ARA Tech. Diagram ini menunjukkan bagaimana subnet-subnet kecil (Daun) digabungkan menjadi Supernet (Root).
+
+![CIDR Tree Diagram](path/to/your/image.png)
+*(Ganti `path/to/your/image.png` dengan lokasi file gambar Tree CIDR kamu)*
 
 ## 3. Implementasi & Konfigurasi
 *(Bagian ini akan berisi dokumentasi konfigurasi untuk setiap fitur, disertai penjelasan dan screenshot.)*
